@@ -5,10 +5,9 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
 	private Rigidbody2D rb;
-	public float speed = 5f;
 	public float mapWidth = 10f;
-	public float jumpAmount = 10f;
-	public bool direction;
+	public bool isGrounded = false;
+
 	// Start is called before the first frame update
 	void Start()
     {
@@ -18,72 +17,24 @@ public class Player : MonoBehaviour
 	// Update is called once per frame
 	void Update()
 	{
-		{
-			//if (Time.time > powerUpTimer + 5f)
-			//{
-			//	rb.GetComponent<Renderer>().material.color = Color.white;
-			//	jumpAmount = 10;
-			//}
-			if (Input.GetKeyDown(KeyCode.Space))
-			{
-				//if (isGrounded == true)
-				//{
-					Jump();
-				//}
-			}
-			var movement = HandleMovement();
-			Mathf.Clamp(movement.x, -mapWidth, mapWidth);
-		}
+		//Debug.Log(transform.position.x);
+		var movement = FindObjectOfType<PlayerMovement>();
+		//Mathf.Clamp(movement.x, -mapWidth, mapWidth);
 	}
 
-	private void Jump()
+	private void OnCollisionEnter2D(Collision2D collisionInfo)
 	{
-		rb.AddForce(Vector2.up * jumpAmount, ForceMode2D.Impulse);
+		if (collisionInfo.gameObject.tag.Equals("Ground"))
+		{
+			isGrounded = true;
+		}
 	}
 
-	Vector2 HandleMovement()
+	private void OnCollisionExit2D(Collision2D collision)
 	{
-		if (Input.GetKey(KeyCode.LeftArrow))
+		if (collision.gameObject.tag.Equals("Ground"))
 		{
-			FlipLeft();
-			return rb.velocity = new Vector2(-speed, rb.velocity.y);
-		}
-		else
-		{
-			if (Input.GetKey(KeyCode.RightArrow))
-			{
-				FlipRight();
-				return rb.velocity = new Vector2(+speed, rb.velocity.y);
-			}
-			else
-			{
-				return rb.velocity = new Vector2(0, rb.velocity.y);
-			}
+			isGrounded = false;
 		}
 	}
-
-	private void FlipLeft()
-	{
-		if (transform.rotation.y > 0)
-		{
-			transform.Rotate(0f, 180f, 0f);
-			direction = false;
-		}
-	}
-
-	private void FlipRight()
-	{
-		if (transform.rotation.y <= 0)
-		{
-			transform.Rotate(0f, 180f, 0f);
-		}
-	}
-
-	//private void PlayerDirection()
-	//{
-	//	if (Input.GetKey(KeyCode.LeftArrow && transform))
-	//	{
-	//		transform.Rotate
-	//	}
-	//}
 }
