@@ -4,17 +4,25 @@ using UnityEngine;
 
 public class EnemyWeapon : MonoBehaviour
 {
+    public Transform firepoint;
     public GameObject enemyBulletPrefab;
+    float timer;
 
-    // Start is called before the first frame update
-    void Start()
+	void Start()
+	{
+		timer = Time.time + 3;
+	}
+	// Update is called once per frame
+	void Update()
     {
-        
+		if (timer > Time.time)
+		{
+			Shoot();
+		}
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+	void Shoot()
+	{
+		Instantiate(enemyBulletPrefab, firepoint.position, firepoint.rotation);
+	}
 }
